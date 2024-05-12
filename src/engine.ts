@@ -33,35 +33,6 @@ import {
 } from "./types";
 import { Conversation, compareConversationObject, getConversation } from "./conversation";
 
-class PartitionedArtifactCache extends tvmjs.ArtifactIndexedDBCache {
-  constructor(dbName: string) {
-    super(dbName);
-  }
-  async addToCache(url: string, storetype?: string): Promise<void> {
-    console.log(`> PartitionedArtifactCache.addToCache: ${url}`)
-    await this.initDB(); // await the initDB process
-    // If already cached, nothing to do
-    const isInDB = await this.isUrlInDB(url);
-    if (isInDB) {
-      return;
-    }
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const response_copy = response.clone();
-      await this.addToIndexedDB(url, response_copy, storetype);
-    } catch (error) {
-      throw Error("Failed to store " + url + " with error: " + error);
-    }
-  }
-  async asyncGetHelper(url: string): Promise<any> {
-    console.log(`> PartitionedArtifactCache.asyncGetHelper: ${url}`)
-    return super.asyncGetHelper(url);
-  }
-}
-
 /**
  * Creates `Engine`, and loads `modelId` onto WebGPU.
  * 
@@ -144,7 +115,7 @@ export class Engine implements EngineInterface {
 
     let configCache: tvmjs.ArtifactCacheTemplate;
     if (appConfig.useIndexedDBCache) {
-      configCache = new tvmjs.ArtifactIndexedDBCache("webllm/config");
+      configCache = new tvmjs.PartitionedArtifactCache("webllm/config");
     } else {
       configCache = new tvmjs.ArtifactCache("webllm/config");
     }
@@ -159,7 +130,7 @@ export class Engine implements EngineInterface {
     // load tvm wasm
     let wasmCache: tvmjs.ArtifactCacheTemplate;
     if (appConfig.useIndexedDBCache) {
-      wasmCache = new tvmjs.ArtifactIndexedDBCache("webllm/wasm");
+      wasmCache = new tvmjs.PartitionedArtifactCache("webllm/wasm");
     } else {
       wasmCache = new tvmjs.ArtifactCache("webllm/wasm");
     }
@@ -742,7 +713,7 @@ export class Engine implements EngineInterface {
   ): Promise<Tokenizer> {
     let modelCache: tvmjs.ArtifactCacheTemplate;
     if (appConfig.useIndexedDBCache) {
-      modelCache = new PartitionedArtifactCache("webllm/model");
+      modelCache = new tvmjs.PartitionedArtifactCache("webllm/model");
     } else {
       modelCache = new tvmjs.ArtifactCache("webllm/model");
     }
