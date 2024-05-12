@@ -56,6 +56,10 @@ class PartitionedArtifactCache extends tvmjs.ArtifactIndexedDBCache {
       throw Error("Failed to store " + url + " with error: " + error);
     }
   }
+  async asyncGetHelper(url: string): Promise<any> {
+    console.log(`> PartitionedArtifactCache.asyncGetHelper: ${url}`)
+    return super.asyncGetHelper(url);
+  }
 }
 
 /**
