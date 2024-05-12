@@ -1,6 +1,7 @@
 [discord-url]: https://discord.gg/9Xpy2HGBuD
 
 # Web LLM
+
 | [NPM Package](https://www.npmjs.com/package/@mlc-ai/web-llm) | [Get Started](#get-started) | [Examples](examples) | [Documentation](https://mlc.ai/mlc-llm/docs/deploy/javascript.html) | [MLC LLM](https://github.com/mlc-ai/mlc-llm) | [Discord][discord-url] |
 
 WebLLM is a modular and customizable javascript package that directly
@@ -17,7 +18,6 @@ We can bring a lot of fun opportunities to build AI assistants for everyone and 
 You can use WebLLM as a base [npm package](https://www.npmjs.com/package/@mlc-ai/web-llm) and build your own web application on top of it by following the [documentation](https://mlc.ai/mlc-llm/docs/deploy/javascript.html) and checking out [Get Started](#get-started).
 This project is a companion project of [MLC LLM](https://github.com/mlc-ai/mlc-llm),
 which runs LLMs natively on iPhone and other native local environments.
-
 
 <img src="site/img/fig/demo.gif">
 
@@ -112,7 +112,6 @@ async function main() {
 }
 ```
 
-
 ### Build a ChatApp
 
 You can find a complete chat app example in [examples/simple-chat](examples/simple-chat/).
@@ -124,6 +123,7 @@ You can also find examples on building chrome extension with WebLLM in [examples
 ## Full OpenAI Compatibility
 
 WebLLM is designed to be fully compatible with [OpenAI API](https://platform.openai.com/docs/api-reference/chat). Thus, besides building simple chat bot, you can also have the following functionalities with WebLLM:
+
 - [streaming](examples/streaming): return output as chunks in real-time in the form of an AsyncGenerator
 - [json-mode](examples/json-mode): efficiently ensure output is in json format, see [OpenAI Reference](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) for more.
 - [function-calling](examples/function-calling): function calling with fields `tools` and `tool_choice`.
@@ -134,6 +134,7 @@ WebLLM is designed to be fully compatible with [OpenAI API](https://platform.ope
 We export all supported models in `webllm.prebuiltAppConfig`, where you can see a list of models
 that you can simply call `const engine: webllm.EngineInterface = await webllm.CreateEngine(anyModel)` with.
 Prebuilt models include:
+
 - Llama-2
 - Gemma
 - Phi-1.5 and Phi-2
@@ -192,7 +193,6 @@ not necessarily a new model (e.g. `NeuralHermes-Mistral` can reuse `Mistral`'s
 model library). For examples on how a model library can be shared by different model variants,
 see `prebuiltAppConfig`.
 
-
 ## Build WebLLM Package From Source
 
 NOTE: you don't need to build by yourself unless you would
@@ -201,36 +201,49 @@ like to change the WebLLM package. To simply use the npm, follow [Get Started](#
 WebLLM package is a web runtime designed for [MLC LLM](https://github.com/mlc-ai/mlc-llm).
 
 1. Install all the prerequisites for compilation:
-    1. [emscripten](https://emscripten.org). It is an LLVM-based compiler that compiles C/C++ source code to WebAssembly.
-        - Follow the [installation instruction](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended) to install the latest emsdk.
-        - Source `emsdk_env.sh` by `source path/to/emsdk_env.sh`, so that `emcc` is reachable from PATH and the command `emcc` works.
-    4. Install jekyll by following the [official guides](https://jekyllrb.com/docs/installation/). It is the package we use for website. This is not needed if you're using nextjs (see next-simple-chat in the examples).
-    5. Install jekyll-remote-theme by command. Try [gem mirror](https://gems.ruby-china.com/) if install blocked.
-        ```shell
-        gem install jekyll-remote-theme
-        ```
-    We can verify the successful installation by trying out `emcc` and `jekyll` in terminal, respectively.
 
-2. Setup necessary environment
+- [emscripten](https://emscripten.org). It is an LLVM-based compiler that compiles C/C++ source code to WebAssembly.
+  - Follow the [installation instruction](https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended) to install the latest emsdk.
+  - Source `emsdk_env.sh` by `source path/to/emsdk_env.sh`, so that `emcc` is reachable from PATH and the command `emcc` works.
+- Install jekyll by following the [official guides](https://jekyllrb.com/docs/installation/). It is the package we use for website. This is not needed if you're using nextjs (see next-simple-chat in the examples).
+- Install jekyll-remote-theme by command. Try [gem mirror](https://gems.ruby-china.com/) if install blocked.
 
-    Prepare all the necessary dependencies for web build:
-    ```shell
-    ./scripts/prep_deps.sh
-    ```
+  ```shell
+  gem install jekyll-remote-theme
+  ```
 
-3. Buld WebLLM Package
+We can verify the successful installation by trying out `emcc` and `jekyll` in terminal, respectively.
 
-    ```shell
-    npm run build
-    ```
+2. Clone the source
 
-4. Validate some of the sub-packages
+```bash
+git clone git@github.com:mlc-ai/web-llm.git
+git submodule update --init --recursive
+cd web-llm
+```
 
-    You can then go to the subfolders in [examples](examples) to validate some of the sub-packages.
-    We use Parcelv2 for bundling. Although Parcel is not very good at tracking parent directory
-    changes sometimes. When you make a change in the WebLLM package, try to edit the `package.json`
-    of the subfolder and save it, which will trigger Parcel to rebuild.
+3. Setup necessary environment
 
+Prepare all the necessary dependencies for web build:
+
+```shell
+export TVM_HOME=$(pwd)/3rdparty/tvm
+nvm use --lts # use the latest NodeJs
+./scripts/prep_deps.sh
+```
+
+4. Build WebLLM Package
+
+```shell
+npm run build
+```
+
+5. Validate some of the sub-packages
+
+You can then go to the subfolders in [examples](examples) to validate some of the sub-packages.
+We use Parcelv2 for bundling. Although Parcel is not very good at tracking parent directory
+changes sometimes. When you make a change in the WebLLM package, try to edit the `package.json`
+of the subfolder and save it, which will trigger Parcel to rebuild.
 
 ## Links
 
