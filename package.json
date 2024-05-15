@@ -6,7 +6,7 @@
   "types": "lib/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "rollup -c && ./cleanup-index-js.sh",
+    "build": "TVM_HOME=\"$(pwd)/3rdparty/tvm\" ./scripts/prep_deps.sh && rollup -c && ./scripts/cleanup-index-js.sh",
     "lint": "npx eslint .",
     "test": "yarn jest"
   },
@@ -42,7 +42,7 @@
     "rollup-plugin-typescript2": "^0.34.1",
     "ts-jest": "^29.1.2",
     "tslib": "^2.3.1",
-    "tvmjs": "file:./tvm_home/web",
+    "tvmjs": "file:./3rdparty/tvm/web",
     "typescript": "^4.9.5"
   }
 }
